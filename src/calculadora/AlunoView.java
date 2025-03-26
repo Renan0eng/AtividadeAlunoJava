@@ -17,9 +17,10 @@ public class AlunoView extends javax.swing.JDialog {
     /**
      * Creates new form AlunoView
      */
-    
     List<Aluno> listaAlunos = new ArrayList<Aluno>();
-    
+
+    double mediaTurmaqtd = 0;
+
     public AlunoView(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
@@ -44,6 +45,7 @@ public class AlunoView extends javax.swing.JDialog {
         jLabel3 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tabela = new javax.swing.JTable();
+        mediaTurma = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -75,6 +77,8 @@ public class AlunoView extends javax.swing.JDialog {
         ));
         jScrollPane1.setViewportView(tabela);
 
+        mediaTurma.setText("Media Turma:");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -82,7 +86,10 @@ public class AlunoView extends javax.swing.JDialog {
             .addGroup(layout.createSequentialGroup()
                 .addGap(28, 28, 28)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(mediaTurma))
                     .addComponent(jLabelAlunos)
                     .addComponent(jButton1)
                     .addGroup(layout.createSequentialGroup()
@@ -97,7 +104,7 @@ public class AlunoView extends javax.swing.JDialog {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(InputNota2, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel2))))
-                .addContainerGap(169, Short.MAX_VALUE))
+                .addContainerGap(84, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -121,37 +128,55 @@ public class AlunoView extends javax.swing.JDialog {
                 .addGap(18, 18, 18)
                 .addComponent(jLabelAlunos)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(mediaTurma)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(326, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        listaAlunos.add(new Aluno(
-                    InputNome.getText(), 
-                    Double.parseDouble(InputNota1.getText()), 
-                    Double.parseDouble(InputNota2.getText()) 
-            ));
+
+        Aluno alu = new Aluno(
+                InputNome.getText(),
+                Double.parseDouble(InputNota1.getText()),
+                Double.parseDouble(InputNota2.getText())
+        );
+
+        listaAlunos.add(alu);
+        mediaTurmaqtd += alu.getMedia();
         InputNome.setText("");
         InputNota1.setText("");
         InputNota2.setText("");
-        
+        mediaTurma.setText("Media Turma: " + mediaTurmaqtd / listaAlunos.size());
         montarLista();
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    
-    public void montarLista(){
+    public void montarLista() {
         DefaultTableModel modelo = new DefaultTableModel();
         modelo.addColumn("Nome");
         modelo.addColumn("Média");
         modelo.addColumn("Situação");
-        for(Aluno a : listaAlunos){
+        for (Aluno a : listaAlunos) {
             modelo.addRow(new Object[]{a.getNome(), a.getMedia(), a.getSituacao()});
         }
         tabela.setModel(modelo);
+
+        double somaMedia = 0;
+        for (Aluno a : listaAlunos) {
+            somaMedia += a.getMedia();
+        }
+        
+        double mediaTotal = listaAlunos.size() > 0 ? somaMedia / listaAlunos.size() : 0; 
+        
+        modelo.addRow(new Object[]{ "Média Geral: ", "",String.format("%.2f", mediaTotal)});
+
+        tabela.setModel(modelo);
+
     }
+
     /**
      * @param args the command line arguments
      */
@@ -204,6 +229,7 @@ public class AlunoView extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabelAlunos;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel mediaTurma;
     private javax.swing.JTable tabela;
     // End of variables declaration//GEN-END:variables
 }
