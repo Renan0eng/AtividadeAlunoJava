@@ -6,6 +6,7 @@ package calculadora;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Collections;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -146,6 +147,7 @@ public class AlunoView extends javax.swing.JDialog {
         );
 
         listaAlunos.add(alu);
+        Collections.sort(listaAlunos);
         mediaTurmaqtd += alu.getMedia();
         InputNome.setText("");
         InputNota1.setText("");
